@@ -11,28 +11,28 @@ import (
 )
 
 type StructQR struct {
-	Num00 string `json:"00"`
-	Num01 string `json:"01,omitempty"`
-	Num40 struct {
-		Num00 string `json:"00"`
-		Num01 string `json:"01"`
-		Num02 string `json:"02"`
+	Tag00 string `json:"00"`
+	Tag01 string `json:"01,omitempty"`
+	Tag40 struct {
+		Tag00 string `json:"00"`
+		Tag01 string `json:"01"`
+		Tag02 string `json:"02"`
 	} `json:"40"`
-	Num52 string `json:"52"`
-	Num53 string `json:"53"`
-	Num54 string `json:"54,omitempty"`
-	Num58 string `json:"58"`
-	Num59 string `json:"59"`
-	Num60 string `json:"60"`
-	Num61 string `json:"61"`
-	Num62 struct {
-		Num08 string `json:"08"`
-		Num99 struct {
-			Num00 string `json:"00,omitempty"`
-			Num01 string `json:"01,omitempty"`
+	Tag52 string `json:"52"`
+	Tag53 string `json:"53"`
+	Tag54 string `json:"54,omitempty"`
+	Tag58 string `json:"58"`
+	Tag59 string `json:"59"`
+	Tag60 string `json:"60"`
+	Tag61 string `json:"61"`
+	Tag62 struct {
+		Tag08 string `json:"08"`
+		Tag99 struct {
+			Tag00 string `json:"00,omitempty"`
+			Tag01 string `json:"01,omitempty"`
 		} `json:"99,omitempty"`
 	} `json:"62"`
-	Num63 string `json:"63"`
+	Tag63 string `json:"63"`
 }
 
 func Generate(benef, account, name, city, zip, refnum string) (stringQR string, e error) {
@@ -42,11 +42,11 @@ func Generate(benef, account, name, city, zip, refnum string) (stringQR string, 
 		return stringQR, fmt.Errorf("fail get base qr")
 	}
 
-	qr.Num40.Num01 = constant.NnsBRI + constant.BenefType[benef] + refnum[len(refnum)-10:]
-	qr.Num40.Num02 = account
-	qr.Num59 = strings.ToUpper(name)
-	qr.Num60 = city
-	qr.Num61 = zip
+	qr.Tag40.Tag01 = constant.NnsBRI + constant.BenefType[benef] + refnum[len(refnum)-10:]
+	qr.Tag40.Tag02 = account
+	qr.Tag59 = strings.ToUpper(name)
+	qr.Tag60 = city
+	qr.Tag61 = zip
 
 	stringQR, err = qr.tlv()
 	if err != nil || stringQR == "" {
