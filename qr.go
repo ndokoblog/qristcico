@@ -20,6 +20,7 @@ type StructQR struct {
 	} `json:"40"`
 	Num52 string `json:"52"`
 	Num53 string `json:"53"`
+	Num54 string `json:"54,omitempty"`
 	Num58 string `json:"58"`
 	Num59 string `json:"59"`
 	Num60 string `json:"60"`
@@ -98,6 +99,7 @@ func (x StructQR) tlv() (s string, e error) {
 	s += stringify(map[string]interface{}{"40": m["40"]})
 	s += stringify(map[string]interface{}{"52": m["52"]})
 	s += stringify(map[string]interface{}{"53": m["53"]})
+	s += stringify(map[string]interface{}{"54": m["54"]})
 	s += stringify(map[string]interface{}{"58": m["58"]})
 	s += stringify(map[string]interface{}{"59": m["59"]})
 	s += stringify(map[string]interface{}{"60": m["60"]})
