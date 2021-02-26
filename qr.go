@@ -1,4 +1,4 @@
-package main
+package qristcico
 
 import (
 	"encoding/json"
