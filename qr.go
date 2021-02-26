@@ -55,21 +55,31 @@ func Generate(benef, account, name, city, zip, refnum string) (stringQR string, 
 	return stringQR, nil
 }
 
-func Decode(str string) (tag map[string]interface{}, e error) {
+func Decode(str string) (qr StructQR, e error) {
 	var packager []map[string]interface{}
 	err := json.Unmarshal([]byte(constant.Packager), &packager)
 	if err != nil {
-		return nil, fmt.Errorf("fail get packager")
+		return qr, fmt.Errorf("fail get packager")
 	}
 
-	tag = parsingTag(funcTlv(str), packager)
+	tag := parsingTag(funcTlv(str), packager)
 
 	c := crc.CalculateCRC(crc.CCITT, []byte(str[:len(str)-4]))
 	if fmt.Sprintf("%X", c) != tag["63"].(string) {
-		return nil, fmt.Errorf("invalid crc value")
+		return qr, fmt.Errorf("invalid crc value")
 	}
 
-	return tag, nil
+	js, err := json.Marshal(tag)
+	if err != nil {
+		return qr, fmt.Errorf("fail marshal")
+	}
+
+	err = json.Unmarshal(js, &qr)
+	if err != nil {
+		return qr, fmt.Errorf("fail unmarshal")
+	}
+
+	return qr, nil
 }
 
 func (x StructQR) tlv() (s string, e error) {
