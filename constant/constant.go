@@ -31,28 +31,6 @@ var (
 		"CA": "20",
 		"UE": "60",
 	}
-)
 
-type StructQR struct {
-	Num00 string `json:"00"`
-	Num01 string `json:"01,omitempty"`
-	Num40 struct {
-		Num00 string `json:"00"`
-		Num01 string `json:"01"`
-		Num02 string `json:"02"`
-	} `json:"40"`
-	Num52 string `json:"52"`
-	Num53 string `json:"53"`
-	Num58 string `json:"58"`
-	Num59 string `json:"59"`
-	Num60 string `json:"60"`
-	Num61 string `json:"61"`
-	Num62 struct {
-		Num08 string `json:"08"`
-		Num99 struct {
-			Num00 string `json:"00,omitempty"`
-			Num01 string `json:"01,omitempty"`
-		} `json:"99,omitempty"`
-	} `json:"62"`
-	Num63 string `json:"63"`
-}
+	Packager = `[{"tag":"00","value":""},{"tag":"01","value":""},{"tag":"40","value":[{"tag":"00","value":""},{"tag":"01","value":""},{"tag":"02","value":""}]},{"tag":"52","value":""},{"tag":"53","value":""},{"tag":"54","value":""},{"tag":"58","value":""},{"tag":"59","value":""},{"tag":"60","value":""},{"tag":"61","value":""},{"tag":"62","value":[{"tag":"08","value":""},{"tag":"99","value":[{"tag":"00","value":""},{"tag":"01","value":""}]}]},{"tag":"63","value":""}]`
+)
