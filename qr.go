@@ -66,7 +66,9 @@ func Decode(str string) (qr StructQR, e error) {
 	tag := parsingTag(funcTlv(str), packager)
 
 	c := crc.CalculateCRC(crc.CCITT, []byte(str[:len(str)-4]))
-	if fmt.Sprintf("%X", c) != tag["63"].(string) {
+	crc := fmt.Sprintf("%X", c)
+	crc = padLeft(crc, "0", 4)
+	if crc != tag["63"].(string) {
 		return qr, fmt.Errorf("invalid crc value")
 	}
 
@@ -94,30 +96,32 @@ func (x StructQR) tlv() (s string, e error) {
 		return s, fmt.Errorf("fail unmarshal")
 	}
 
-	s += stringify(map[string]interface{}{"00": m["00"]})
-	s += stringify(map[string]interface{}{"01": m["01"]})
-	s += stringify(map[string]interface{}{"40": m["40"]})
-	s += stringify(map[string]interface{}{"52": m["52"]})
-	s += stringify(map[string]interface{}{"53": m["53"]})
-	s += stringify(map[string]interface{}{"54": m["54"]})
-	s += stringify(map[string]interface{}{"58": m["58"]})
-	s += stringify(map[string]interface{}{"59": m["59"]})
-	s += stringify(map[string]interface{}{"60": m["60"]})
-	s += stringify(map[string]interface{}{"61": m["61"]})
-	s += stringify(map[string]interface{}{"62": m["62"]})
-	s += stringify(map[string]interface{}{"63": m["63"]})
+	s += Stringify(map[string]interface{}{"00": m["00"]})
+	s += Stringify(map[string]interface{}{"01": m["01"]})
+	s += Stringify(map[string]interface{}{"40": m["40"]})
+	s += Stringify(map[string]interface{}{"52": m["52"]})
+	s += Stringify(map[string]interface{}{"53": m["53"]})
+	s += Stringify(map[string]interface{}{"54": m["54"]})
+	s += Stringify(map[string]interface{}{"58": m["58"]})
+	s += Stringify(map[string]interface{}{"59": m["59"]})
+	s += Stringify(map[string]interface{}{"60": m["60"]})
+	s += Stringify(map[string]interface{}{"61": m["61"]})
+	s += Stringify(map[string]interface{}{"62": m["62"]})
+	s += Stringify(map[string]interface{}{"63": m["63"]})
 
 	c := crc.CalculateCRC(crc.CCITT, []byte(s[:len(s)-4]))
-	s = s[:len(s)-4] + fmt.Sprintf("%X", c)
+	crc := fmt.Sprintf("%X", c)
+	crc = padLeft(crc, "0", 4)
+	s = s[:len(s)-4] + crc
 
 	return s, nil
 }
 
-func stringify(m map[string]interface{}) (s string) {
+func Stringify(m map[string]interface{}) (s string) {
 	for k, v := range m {
 		s += k
 		if b, ok := v.(map[string]interface{}); ok {
-			temp := stringify(b)
+			temp := Stringify(b)
 			length := pad0(len(temp))
 			s += length
 			s += temp
@@ -171,4 +175,11 @@ func parsingTag(tlv map[string]interface{}, packager []map[string]interface{}) m
 	}
 
 	return tag
+}
+
+func padLeft(s, pad string, l int) string {
+	for len(s) < l {
+		s = pad + s
+	}
+	return s
 }
