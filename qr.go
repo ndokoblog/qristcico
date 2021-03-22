@@ -119,19 +119,19 @@ func (x StructQR) tlv() (s string, e error) {
 
 func Stringify(m map[string]interface{}) (s string) {
 	for k, v := range m {
-		s += k
-		if b, ok := v.(map[string]interface{}); ok {
-			temp := Stringify(b)
-			length := pad0(len(temp))
-			s += length
-			s += temp
-		} else {
-			length := pad0(len(v.(string)))
-			s += length
-			s += v.(string)
+		if va, ok := v.([]map[string]interface{}); ok {
+			temp := ""
+			for _, vb := range va {
+				temp += Stringify(vb)
+			}
+			return temp
+		} else if vc, ok := v.(map[string]interface{}); ok {
+			return Stringify(vc)
+		} else if vd, ok := v.(string); ok {
+			return k + pad0(len(vd)) + vd
 		}
 	}
-	return s
+	return ""
 }
 
 func pad0(i int) string {
