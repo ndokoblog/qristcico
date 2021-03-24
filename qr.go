@@ -26,6 +26,9 @@ type StructQR struct {
 	Tag60 string `json:"60"`
 	Tag61 string `json:"61"`
 	Tag62 struct {
+		Tag01 string `json:"01,omitempty"`
+		Tag05 string `json:"05,omitempty"`
+		Tag07 string `json:"07,omitempty"`
 		Tag08 string `json:"08"`
 		Tag99 struct {
 			Tag00 string `json:"00,omitempty"`

@@ -25,12 +25,12 @@ var (
 		"63":"CDEF"
 	  }`
 
-	NnsBRI    = "93600014"
+	NnsBRI    = "93600002"
 	BenefType = map[string]string{
 		"SA": "10",
 		"CA": "20",
 		"UE": "60",
 	}
 
-	Packager = `[{"tag":"00","value":""},{"tag":"01","value":""},{"tag":"40","value":[{"tag":"00","value":""},{"tag":"01","value":""},{"tag":"02","value":""}]},{"tag":"52","value":""},{"tag":"53","value":""},{"tag":"54","value":""},{"tag":"58","value":""},{"tag":"59","value":""},{"tag":"60","value":""},{"tag":"61","value":""},{"tag":"62","value":[{"tag":"08","value":""},{"tag":"99","value":[{"tag":"00","value":""},{"tag":"01","value":""}]}]},{"tag":"63","value":""}]`
+	Packager = `[{"tag":"00","value":""},{"tag":"01","value":""},{"tag":"40","value":[{"tag":"00","value":""},{"tag":"01","value":""},{"tag":"02","value":""}]},{"tag":"52","value":""},{"tag":"53","value":""},{"tag":"54","value":""},{"tag":"58","value":""},{"tag":"59","value":""},{"tag":"60","value":""},{"tag":"61","value":""},{"tag":"62","value":[{"tag":"01","value":""},{"tag":"05","value":""},{"tag":"07","value":""},{"tag":"08","value":""},{"tag":"99","value":[{"tag":"00","value":""},{"tag":"01","value":""}]}]},{"tag":"63","value":""}]`
 )
