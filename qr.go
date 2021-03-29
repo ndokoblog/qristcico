@@ -66,7 +66,14 @@ func Decode(str string) (qr StructQR, e error) {
 		return qr, fmt.Errorf("fail get packager")
 	}
 
-	tag := parsingTag(funcTlv(str), packager)
+	t, err := funcTlv(str)
+	if err != nil {
+		return qr, err
+	}
+	tag, err := parsingTag(t, packager)
+	if err != nil {
+		return qr, err
+	}
 
 	c := crc.CalculateCRC(crc.CCITT, []byte(str[:len(str)-4]))
 	crc := fmt.Sprintf("%X", c)
@@ -145,21 +152,30 @@ func pad0(i int) string {
 	return length
 }
 
-func funcTlv(str string) map[string]interface{} {
+func funcTlv(str string) (map[string]interface{}, error) {
 	index := 0
 	tag := map[string]interface{}{}
 
 	for index < len(str) {
+		if index+2 < len(str) {
+			return tag, fmt.Errorf("invalid length format")
+		}
 		de := str[index : index+2]
+		if index+4 < len(str) {
+			return tag, fmt.Errorf("invalid length format")
+		}
 		length, _ := strconv.Atoi(str[index+2 : index+4])
+		if index+4+length < len(str) {
+			return tag, fmt.Errorf("invalid length format")
+		}
 		tag[de] = str[index+4 : index+4+length]
 		index = index + 4 + length
 	}
 
-	return tag
+	return tag, nil
 }
 
-func parsingTag(tlv map[string]interface{}, packager []map[string]interface{}) map[string]interface{} {
+func parsingTag(tlv map[string]interface{}, packager []map[string]interface{}) (map[string]interface{}, error) {
 	tag := map[string]interface{}{}
 
 	for i := 0; i < len(packager); i++ {
@@ -169,7 +185,14 @@ func parsingTag(tlv map[string]interface{}, packager []map[string]interface{}) m
 				js, _ := json.Marshal(packager[i]["value"])
 				err := json.Unmarshal(js, &m)
 				if err == nil {
-					tag[t] = parsingTag(funcTlv(tlv[t].(string)), m)
+					tl, err := funcTlv(tlv[t].(string))
+					if err != nil {
+						return tag, err
+					}
+					tag[t], err = parsingTag(tl, m)
+					if err != nil {
+						return tag, err
+					}
 				} else {
 					tag[t] = tlv[packager[i]["tag"].(string)]
 				}
@@ -177,7 +200,7 @@ func parsingTag(tlv map[string]interface{}, packager []map[string]interface{}) m
 		}
 	}
 
-	return tag
+	return tag, nil
 }
 
 func padLeft(s, pad string, l int) string {
