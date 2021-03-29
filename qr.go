@@ -157,15 +157,15 @@ func funcTlv(str string) (map[string]interface{}, error) {
 	tag := map[string]interface{}{}
 
 	for index < len(str) {
-		if index+2 < len(str) {
+		if index+2 > len(str) {
 			return tag, fmt.Errorf("invalid length format")
 		}
 		de := str[index : index+2]
-		if index+4 < len(str) {
+		if index+4 > len(str) {
 			return tag, fmt.Errorf("invalid length format")
 		}
 		length, _ := strconv.Atoi(str[index+2 : index+4])
-		if index+4+length < len(str) {
+		if index+4+length > len(str) {
 			return tag, fmt.Errorf("invalid length format")
 		}
 		tag[de] = str[index+4 : index+4+length]
