@@ -35,7 +35,7 @@ type StructQR struct {
 	Tag63 string `json:"63"`
 }
 
-func Generate(benef, account, name, city, zip, refnum string) (stringQR string, e error) {
+func Generate(benef, account, name, city, zip, refnum string, amount int) (stringQR string, e error) {
 	var qr StructQR
 	err := json.Unmarshal([]byte(constant.BaseQRBRI), &qr)
 	if err != nil {
@@ -44,6 +44,11 @@ func Generate(benef, account, name, city, zip, refnum string) (stringQR string, 
 
 	qr.Tag40.Tag01 = constant.NnsBRI + constant.BenefType[benef] + refnum[len(refnum)-10:]
 	qr.Tag40.Tag02 = account
+
+	if amount > 0 {
+		qr.Tag54 = strconv.Itoa(amount)
+	}
+
 	qr.Tag59 = strings.ToUpper(name)
 	qr.Tag60 = city
 	qr.Tag61 = zip
