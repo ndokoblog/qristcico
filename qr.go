@@ -35,11 +35,11 @@ type StructQR struct {
 	Tag63 string `json:"63"`
 }
 
-func Generate(benef, account, name, city, zip, refnum string, amount int) (stringQR string, e error) {
+func Generate(benef, account, name, city, zip, refnum string, amount int) (stringQR, mpan string, e error) {
 	var qr StructQR
 	err := json.Unmarshal([]byte(constant.BaseQRBRI), &qr)
 	if err != nil {
-		return stringQR, fmt.Errorf("fail get base qr")
+		return stringQR, mpan, fmt.Errorf("fail get base qr")
 	}
 
 	qr.Tag40.Tag01 = constant.NnsBRI + constant.BenefType[benef] + refnum[len(refnum)-10:]
@@ -55,10 +55,12 @@ func Generate(benef, account, name, city, zip, refnum string, amount int) (strin
 
 	stringQR, err = qr.tlv()
 	if err != nil || stringQR == "" {
-		return stringQR, fmt.Errorf("fail generate")
+		return stringQR, mpan, fmt.Errorf("fail generate")
 	}
 
-	return stringQR, nil
+	mpan = qr.Tag40.Tag01
+
+	return stringQR, mpan, nil
 }
 
 func Decode(str string) (qr StructQR, e error) {
