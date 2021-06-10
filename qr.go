@@ -120,7 +120,11 @@ func (x StructQR) tlv() (s string, e error) {
 	s += Stringify(map[string]interface{}{"40": m["40"]})
 	s += Stringify(map[string]interface{}{"52": m["52"]})
 	s += Stringify(map[string]interface{}{"53": m["53"]})
-	s += Stringify(map[string]interface{}{"54": m["54"]})
+
+	if x.Tag54 != "" {
+		s += Stringify(map[string]interface{}{"54": m["54"]})
+	}
+
 	s += Stringify(map[string]interface{}{"58": m["58"]})
 	s += Stringify(map[string]interface{}{"59": m["59"]})
 	s += Stringify(map[string]interface{}{"60": m["60"]})
