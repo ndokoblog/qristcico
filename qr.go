@@ -68,6 +68,41 @@ func Generate(benef, account, name, city, zip, accountId string, amount int) (st
 	return stringQR, mpan, nil
 }
 
+func GenerateWithAmountDif(benef, account, name, city, zip, accountId string, amount int) (stringQR, mpan string, e error) {
+	var qr StructQR
+	err := json.Unmarshal([]byte(constant.BaseQRBRI), &qr)
+	if err != nil {
+		return stringQR, mpan, fmt.Errorf("fail get base qr")
+	}
+
+	digit := constant.BenefType[benef]
+	if digit == "" {
+		digit = constant.BenefType["default"]
+	}
+
+	amountDigit := "0"
+	if amount > 0 {
+		qr.Tag54 = strconv.Itoa(amount)
+		amountDigit = "1"
+	}
+
+	qr.Tag40.Tag01 = constant.NnsBRI + digit + amountDigit + padLeft(accountId, "0", 8)
+	qr.Tag40.Tag02 = account
+
+	qr.Tag59 = strings.ToUpper(name)
+	qr.Tag60 = city
+	qr.Tag61 = zip
+
+	stringQR, err = qr.tlv()
+	if err != nil || stringQR == "" {
+		return stringQR, mpan, fmt.Errorf("fail generate")
+	}
+
+	mpan = qr.Tag40.Tag01
+
+	return stringQR, mpan, nil
+}
+
 func Decode(str string) (qr StructQR, e error) {
 	var packager []map[string]interface{}
 	err := json.Unmarshal([]byte(constant.Packager), &packager)
